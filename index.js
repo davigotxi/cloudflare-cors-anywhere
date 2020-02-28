@@ -64,13 +64,18 @@ addEventListener("fetch", async event=>{
             if (origin_url.search.startsWith("?")) {
                 recv_headers = {};
                 for (var pair of event.request.headers.entries()) {
-                    if ((pair[0].match("^origin") == null) && 
-			(pair[0].match("eferer") == null) && 
-			(pair[0].match("^cf-") == null) && 
-			(pair[0].match("^x-forw") == null) && 
-			(pair[0].match("^x-cors-headers") == null)
-		    ) recv_headers[pair[0]] = pair[1];
+                    //Strip-out the following headers
+                    if ((pair[0].match("^origin") == null) &&
+                        (pair[0].match("eferer") == null) &&
+                        (pair[0].match("^cf-") == null) &&
+                        (pair[0].match("^x-forw") == null) &&
+                        (pair[0].match("^x-cors-headers") == null) &&
+                        (pair[0].match("^user-agent") == null)) {
+
+                        recv_headers[pair[0]] = pair[1];
+                    }
                 }
+                //console.log(recv_headers)
 		    
                 if (xheaders != null) {
                     Object.entries(xheaders).forEach((c)=>recv_headers[c[0]] = c[1]);
